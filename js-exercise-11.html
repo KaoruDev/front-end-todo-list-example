@@ -177,7 +177,7 @@
 	        }
 	        toDoListDiv.html('');
 	        this.updateList();
-	        checkItemOff();
+	        //checkItemOff();
 	    }
 	};
 	TodoList.prototype.updateTotalNumber = function() {
@@ -193,7 +193,7 @@
     		toDoListDiv.html('');
 	    	mylist.addToList(newTodoTitle);
 	    	$('#add-todo-item')[0].reset();
-	    	checkItemOff();
+	    	// checkItemOff();
 	    	flashMessage.removeClass('error').addClass('good-vibes').html('Todo Item Added!').show();
 	    	if ($(flashMessage).hasClass('good-vibes')) {
 				setTimeout("$(flashMessage).fadeOut('fast')", 2000); 
@@ -204,19 +204,30 @@
     });
 
     // FUNCTION TO MARK TODO ITEM AS DONE
-    var checkItemOff = function() {
-	    $('.check-todo').unbind('click');
-	    $('.check-todo').bind('click',function(e) {
-	    	var thisTodoID = $(this).data('id');
-	    	if($(this).attr('checked', 'checked')) {
-	    		var thisIfComplete = true; 
-	    	} else {
-	    		var thisIfComplete = false; 
-	    	}
-	    	mylist.updateTodoStatus(thisTodoID, thisIfComplete);
-	    });
-	};
-	checkItemOff();
+ //    var checkItemOff = function() {
+	//     $('.check-todo').unbind('click');
+	//     $('.check-todo').bind('click',function(e) {
+	//     	var thisTodoID = $(this).data('id');
+	//     	if($(this).attr('checked', 'checked')) {
+	//     		var thisIfComplete = true; 
+	//     	} else {
+	//     		var thisIfComplete = false; 
+	//     	}
+	//     	mylist.updateTodoStatus(thisTodoID, thisIfComplete);
+	//     });
+	// };
+	// checkItemOff();
+
+	$(document).bind('click', '.check-todo', function(e) {
+		e.preventDefault();
+    	var thisTodoID = $(this).data('id');
+    	if($(this).attr('checked', 'checked')) {
+    		var thisIfComplete = true; 
+    	} else {
+    		var thisIfComplete = false; 
+    	}
+    	mylist.updateTodoStatus(thisTodoID, thisIfComplete);
+    });
 
 	$('#mark-all-as-complete').on('click', function() {
 		alert('mark as completed');
