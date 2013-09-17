@@ -26,7 +26,7 @@
 			<span>&nbsp;</span>
 		</div>
 		<div class="large-6 columns coolbox">
-			<h3>Todos</h3>
+			<h3>My Todo List</h3>
 			
 			
 			<form id="add-todo-item" class="clearfix">
@@ -58,6 +58,7 @@
 
 
 <div id="templates">
+
 	<script class="todo-item" type="text/template">
 		<p class="todo-item-wrapper">
 			<% if (complete == true) {%>
@@ -66,18 +67,36 @@
 				<span class="green-txt"><strong><i class="icon-ok"></i> Completed</strong></span>
 			<% } else { %>
 				<span><input type="checkbox" class="check-todo" data-title="<%= name %>" data-id="<%= id %>" /></span>
-				<span class="name incomplete"><%= name %></span> 
+				<span class="name incomplete" data-id="<%= id %>"><%= name %></span> 
 			<% } %>
 		</p>
 	</script>
+
+
 	<script id="total-num-todo-item" type="text/template">
 		<p><%= %> items left ...</p>
 	</script>
+
+
+	<script class="edit-todo-item" type="text/template">
+		<div class="row">
+			<div class="large-12 columns edit-todo-item-wrapper">
+				<form>
+					<div class="large-10 columns">
+						<input type="text" class="edit-todo-item" value="<%= name %>" />
+					</div>
+					<div class="large-2 columns">
+						<input class="button successs small" type="submit" value="save" />
+					</div>
+				</form>
+			</div>	
+		</div>
+	</script>
+
 </div>
 
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore.js"></script>
 <script type="text/javascript">
 	var newTodoTitle;
 	var toDoListDiv = $('#todo-list');
@@ -141,6 +160,18 @@
 	    }
 	    return totalNumber;
 	};
+	TodoList.prototype.returnToDoEditForm = function(toDoID, toDoTitle) {
+		var editTodoTemplateHtml = $('#templates .edit-todo-item').html();
+		var editTodoTemplate = _.template(editTodoTemplateHtml);
+		var editingTodoItem = {
+			id: toDoID,
+			name: toDoTitle, 
+			complete: false
+		};
+		editTodoListHtml = editTodoTemplate(editingTodoItem);
+	    //toDoListDiv.append(editTodoListHtml);
+	    return editTodoListHtml;
+	}
 	
 
 	var refreshTotalNumLeft = function () {
@@ -183,18 +214,24 @@
 
 	$(document).on('dblclick', '.name.incomplete', function() {
 		var thisText = $(this).text();
-		// alert(thisText);
-		$(this).parent('.todo-item-wrapper').html('<form><input type="text" class="edit-todo-item" value="' + thisText + '" /><input class="button success" type="submit" value="save" /></form>');
+		var thisTodoID = $(this).data('id');
+
+		var editTodoListHtml = mylist.returnToDoEditForm(thisTodoID, thisText);
+		//alert(thisText);
+		$(this).parent('.todo-item-wrapper').html(editTodoListHtml);
+
+
 		// @TODO: NEED TO MAKE A NEW TEMPLATE FOR THIS
 		// @TODO: LINE NEEDS TO TURN INTO (CHECKBOX) (INPUT) (SUBMIT BUTTON - DISPLAY NONE - THEN WHEN IN FORM CAN CLICK ENTER IN THE INPUT BOX)
 	});
 
-	$(document).on('submit', '.edit-todo-item', function() {
-		var thisText = $(this).val();
-		alert(thisText);
-	});
+	// $(document).on('submit', '.edit-todo-item', function(e) {
+	// 	e.preventDefault();
+	// 	var thisText = $(this).val();
+	// 	alert(thisText);
+	// });
 
-
+	
 
 	mylist = new TodoList(tasks);
 </script>
