@@ -1,56 +1,9 @@
 <html>
 <head>
-  <title>Javascript TO LIST</title>
+  <title>Javascript TODO LIST</title>
   <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/foundation/4.3.1/css/foundation.css">
   <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-  <style type="text/css">
-  	body {
-  		background: #cccccc;
-  	}
-  	h3 {text-align: center;}
-  	#message-header {
-  		margin-top: 10px;
-  	}
-  	#flash-message {
-  		padding: 5px;
-  		border: 1px solid transparent;
-  	}
-  	#flash-message.error {
-		color: red;
-		border: 1px solid red;
-		background: #fcb3bc;
-  	}
-  	#flash-message.good-vibes {
-		color: green;
-		border: 1px solid green;
-		background: #c0d890;
-  	}
-	.coolbox {
-		border: 1px solid #000000;
-		background: #fff;
-		margin-top: 20px;
-		-webkit-border-radius: 10px;
-    	border-radius: 10px;
-    	-webkit-box-shadow:  5px 5px 5px 5px rgba(120, 120, 120, .6);
-        box-shadow:  5px 5px 5px 5px rgba(120, 120, 120, .6);
-	}
-	#add-todo-item .button.small {
-		margin-top: 15px;
-	}
-	.green-txt {
-		color: green;
-	}
-	#todo-list p span.name {
-		font-size: 20px;
-	}
-	#todo-list p {
-		border-bottom: 1px solid #cccccc;
-	}
-	#todo-list p:last-child {
-		border-bottom: 0px solid #cccccc;
-	}
-
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -128,18 +81,7 @@
 	var newTodoTitle;
 	var toDoListDiv = $('#todo-list');
 	var flashMessage = $('#flash-message');
-	var tasks = [
-	  // {
-	  //   id: 0,
-	  //   name: 'Create TODO list',
-	  //   complete: true
-	  // },
-	  // {
-	  //   id: 1,
-	  //   name: 'Implement Exercise',
-	  //   complete: false
-	  // }
-	];
+	var tasks = [];
 
 	var TodoList = function(array) {
 		this.list = array;
@@ -203,23 +145,7 @@
     	}
     });
 
-    // FUNCTION TO MARK TODO ITEM AS DONE
- //    var checkItemOff = function() {
-	//     $('.check-todo').unbind('click');
-	//     $('.check-todo').bind('click',function(e) {
-	//     	var thisTodoID = $(this).data('id');
-	//     	if($(this).attr('checked', 'checked')) {
-	//     		var thisIfComplete = true; 
-	//     	} else {
-	//     		var thisIfComplete = false; 
-	//     	}
-	//     	mylist.updateTodoStatus(thisTodoID, thisIfComplete);
-	//     });
-	// };
-	// checkItemOff();
-
-	$(document).bind('click', '.check-todo', function(e) {
-		//e.preventDefault();
+	$(document).on('click', '.check-todo', function(e) {
     	var thisTodoID = $(this).data('id');
     	if($(this).attr('checked', 'checked')) {
     		var thisIfComplete = true; 
