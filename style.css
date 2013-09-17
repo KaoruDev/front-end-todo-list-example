@@ -1,8 +1,11 @@
+@import url(http://fonts.googleapis.com/css?family=Permanent+Marker|Homemade+Apple|Cedarville+Cursive);
+
 body {
 	background: #cccccc;
 }
 h3 {
 	text-align: center;
+	font-family: "Permanent Marker";
 }
 #message-header {
 	margin-top: 10px;
@@ -37,11 +40,24 @@ h3 {
 	color: green;
 }
 #todo-list p span.name {
-	font-size: 20px;
+	font-size: 30px;
+	font-family: "Homemade Apple","Cedarville Cursive", Cursive, serif;
+}
+#todo-list p span.name.strikethrough {
+	text-decoration:line-through;
 }
 #todo-list p {
 	border-bottom: 1px solid #cccccc;
 }
 #todo-list p:last-child {
 	border-bottom: 0px solid #cccccc;
+}
+
+#mark-all-as-complete {
+	font-size: 10px;
+}
+
+#total-count {
+
+	color: #000;
 }

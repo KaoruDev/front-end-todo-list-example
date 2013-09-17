@@ -40,11 +40,12 @@
 			</form>
 			<br clear="all" />
 			<div id="mark-all-as-complete-wrapper">
-				<p>Mark all as complete: <input type="button" id="mark-all-as-complete" value="Complete" /></p>
+				<p>Mark all as complete: <input type="button" id="mark-all-as-complete" class="button success" value="Complete" /></p>
 			</div>
 			
 
 			<div id="todo-list" class="clearfix"></div>
+			<div id="total-count"><span id="total-count-counter">0</span> items left</div>
 		</div>
 		<div class="large-3 columns">
 			<span>&nbsp;</span>
@@ -58,14 +59,14 @@
 
 <div id="templates">
 	<script class="todo-item" type="text/template">
-		<p>
+		<p class="todo-item-wrapper">
 			<% if (complete == true) {%>
-				<span class="name">&bull; <%= name %></span> 
+				<span class="name strikethrough">&bull; <%= name %></span> 
 				<span> | </span>
 				<span class="green-txt"><strong><i class="icon-ok"></i> Completed</strong></span>
 			<% } else { %>
 				<span><input type="checkbox" class="check-todo" data-title="<%= name %>" data-id="<%= id %>" /></span>
-				<span class="name"><%= name %></span> 
+				<span class="name incomplete"><%= name %></span> 
 			<% } %>
 		</p>
 	</script>
@@ -82,6 +83,7 @@
 	var toDoListDiv = $('#todo-list');
 	var flashMessage = $('#flash-message');
 	var tasks = [];
+	var totalCountCounter = $('#total-count-counter');
 
 	var TodoList = function(array) {
 		this.list = array;
@@ -98,7 +100,6 @@
 	};
 	TodoList.prototype.addToList = function(todoItem) {
 		var arrayLength = this.list.length;
-		//var newID = arrayLength + 1;
 		var newTodoItem = {
 			id: arrayLength,
 			name: todoItem, 
@@ -119,14 +120,33 @@
 	        }
 	        toDoListDiv.html('');
 	        this.updateList();
-	        //checkItemOff();
 	    }
 	};
-	TodoList.prototype.updateTotalNumber = function() {
-
+	TodoList.prototype.returnTotalNumberItems = function() {
+		return this.list.length;
 	};
-	mylist = new TodoList(tasks);
+	TodoList.prototype.markAllAsComplete = function() {
+		for (var i = 0; i < this.list.length; i++) {
+	        this.list[i].complete = true;
+	    }
+	    toDoListDiv.html('');
+	    this.updateList();
+	};
+	TodoList.prototype.returnTotalNumberItemsLeft = function() {
+		var totalNumber = 0;
+		for (var i = 0; i < this.list.length; i++) {
+	        if(this.list[i].complete === false) {
+	        	totalNumber = totalNumber + 1;
+	        }
+	    }
+	    return totalNumber;
+	};
+	
 
+	var refreshTotalNumLeft = function () {
+		var currentNumber = mylist.returnTotalNumberItemsLeft();
+    	totalCountCounter.text(currentNumber);
+	}
 
 	$('#add-todo-item .submit').on('click', function(e) {
     	e.preventDefault();
@@ -135,7 +155,6 @@
     		toDoListDiv.html('');
 	    	mylist.addToList(newTodoTitle);
 	    	$('#add-todo-item')[0].reset();
-	    	// checkItemOff();
 	    	flashMessage.removeClass('error').addClass('good-vibes').html('Todo Item Added!').show();
 	    	if ($(flashMessage).hasClass('good-vibes')) {
 				setTimeout("$(flashMessage).fadeOut('fast')", 2000); 
@@ -143,6 +162,7 @@
     	} else {
     		flashMessage.removeClass('good-vibes').addClass('error').html('You cannot enter an empty todo item.  Silly ;) ').show();
     	}
+    	refreshTotalNumLeft();
     });
 
 	$(document).on('click', '.check-todo', function(e) {
@@ -153,16 +173,30 @@
     		var thisIfComplete = false; 
     	}
     	mylist.updateTodoStatus(thisTodoID, thisIfComplete);
+    	refreshTotalNumLeft();
     });
 
 	$('#mark-all-as-complete').on('click', function() {
-		alert('mark as completed');
-		// $(this).attr('checked', 'unchecked');
+		mylist.markAllAsComplete();
+		refreshTotalNumLeft();
+	});
 
+	$(document).on('dblclick', '.name.incomplete', function() {
+		var thisText = $(this).text();
+		// alert(thisText);
+		$(this).parent('.todo-item-wrapper').html('<form><input type="text" class="edit-todo-item" value="' + thisText + '" /><input class="button success" type="submit" value="save" /></form>');
+		// @TODO: NEED TO MAKE A NEW TEMPLATE FOR THIS
+		// @TODO: LINE NEEDS TO TURN INTO (CHECKBOX) (INPUT) (SUBMIT BUTTON - DISPLAY NONE - THEN WHEN IN FORM CAN CLICK ENTER IN THE INPUT BOX)
+	});
+
+	$(document).on('submit', '.edit-todo-item', function() {
+		var thisText = $(this).val();
+		alert(thisText);
 	});
 
 
 
+	mylist = new TodoList(tasks);
 </script>
 
 </body>
